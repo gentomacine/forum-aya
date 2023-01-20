@@ -1,0 +1,24 @@
+{
+  "name": "forum-aya",
+  "version": "1.0.0",
+  "description": "shows all users",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "keywords": [
+    "mongoose",
+    "mongodb"
+  ],
+  "author": "ogwalu chidozie",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.3",
+    "nodemon": "^2.0.20"
+  }
+}
