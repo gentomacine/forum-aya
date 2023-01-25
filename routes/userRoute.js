@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    DisplayAllUser,
     userDeleteController,
     userIdController,
     userLoginController,
@@ -9,19 +10,21 @@ import {
 const userRoute = express.Router();
 
 //register user
-userRoute.post("/register", userRegisterController)
+userRoute.post("/register", userRegisterController);
 
 //login user
-userRoute.post("/login", userLoginController)
+userRoute.post("/login", userLoginController);
+
+// get all the user
+userRoute.get("", DisplayAllUser);
 
 //get user by id
-
-userRoute.get("/:id", userIdController)
+userRoute.get("/:id", userIdController);
 
 //delete user 
-userRoute.delete("/delete", userDeleteController)
+userRoute.delete("/:id", userDeleteController);
 
 // update user
-userRoute.put("/update", userUpdateController)
+userRoute.put("/:id", userUpdateController)
 
 export default userRoute;

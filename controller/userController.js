@@ -5,10 +5,13 @@ export const userRegisterController = async (req, res) => {
     const { firstname, lastname, email, password } = req.body
 
     try {
-        const userFound = await User.findOne({ email });
-        if (userFound) {
-            return res.join({ message: "user already exist" })
+        //check if user already registered
+        const foundUser = await User.findOne({ email });
+        if (foundUser) {
+            return res.json({ message: "user already exist" })
         }
+        // creates user if not registered
+
         const user = await User.create({
             firstname, lastname, email, password
 
@@ -33,6 +36,18 @@ export const userLoginController = async (req, res) => {
         res.json(error.message)
     }
 
+}
+
+export const DisplayAllUser = async (req, res) => {
+    try {
+        res.json({
+            status: "Success",
+            data: "Display All Users"
+        })
+
+    } catch (error) {
+        res.json(error.message)
+    }
 }
 export const userIdController = async (req, res) => {
     try {
