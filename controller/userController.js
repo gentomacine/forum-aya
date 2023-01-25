@@ -1,19 +1,24 @@
 import User from "../model/Users/UserModel.js";
-
+import bcrypt from "bcryptjs";
+import generateToken from "../util/generatetoken.js";
 
 export const userRegisterController = async (req, res) => {
     const { firstname, lastname, email, password } = req.body
-
+    const foundUser = await User.findOne({ email });
     try {
         //check if user already registered
-        const foundUser = await User.findOne({ email });
+
         if (foundUser) {
             return res.json({ message: "user already exist" })
         }
-        // creates user if not registered
-
+        // hash password
+        const salt = await bcrypt.genSalt(10);
+        const passwordhash = await bcrypt.hash(password, salt)
         const user = await User.create({
-            firstname, lastname, email, password
+            firstname,
+            lastname,
+            email,
+            password: passwordhash,
 
         })
         res.json({
@@ -25,13 +30,38 @@ export const userRegisterController = async (req, res) => {
     }
 
 }
+//login user
 
 export const userLoginController = async (req, res) => {
+    const { email, password } = req.body;
+
     try {
-        res.json({
-            status: "success",
-            data: "you have been successfully login"
-        })
+        const foundUser = await User.findOne({ email });
+
+
+        if (!foundUser) {
+            return res.json({
+                status: "error",
+                message: "invalid email login details"
+            })
+        }
+        const foundPassword = await bcrypt.compare(password, foundUser.password);
+
+        if (!foundPassword) {
+            return res.json({ status: "error", message: "invalid login details" })
+        } else {
+
+
+            res.json({
+                status: "success",
+                data: {
+                    firstname: foundUser.firstname,
+                    lastname: foundUser.lastname,
+                    email: foundUser.email,
+                    token: generateToken(foundUser._id)
+                },
+            })
+        }
     } catch (error) {
         res.json(error.message)
     }
@@ -49,12 +79,24 @@ export const DisplayAllUser = async (req, res) => {
         res.json(error.message)
     }
 }
+
+//user profile
 export const userIdController = async (req, res) => {
+    const { id } = req.params
     try {
-        res.json({
-            status: "success",
-            data: "get user by id"
-        })
+        const foundUser = await User.findById(id);
+        if (foundUser) {
+            res.json({
+                status: "success",
+                data: { foundUser }
+            });
+        } else {
+            res.json({
+                status: "error",
+                data: " user with such id doesnt exist"
+            });
+        }
+
     } catch (error) {
         res.json(error.message)
     }
