@@ -1,6 +1,8 @@
 import User from "../model/Users/UserModel.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../util/generatetoken.js";
+import { obtainTokenFromHeader } from "../util/obtaintokenfromheader.js";
+
 
 export const userRegisterController = async (req, res) => {
     const { firstname, lastname, email, password } = req.body
@@ -34,7 +36,7 @@ export const userRegisterController = async (req, res) => {
 
 export const userLoginController = async (req, res) => {
     const { email, password } = req.body;
-
+    //console.log(req.headers);
     try {
         const foundUser = await User.findOne({ email });
 
@@ -82,8 +84,11 @@ export const DisplayAllUser = async (req, res) => {
 
 //user profile
 export const userIdController = async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
     try {
+        //const token = obtainTokenFromHeader(req)
+        // console.log(token);
+        //console.log(req, userAuth);
         const foundUser = await User.findById(id);
         if (foundUser) {
             res.json({
@@ -92,7 +97,7 @@ export const userIdController = async (req, res) => {
             });
         } else {
             res.json({
-                status: "error",
+                status: "success",
                 data: " user with such id doesnt exist"
             });
         }
