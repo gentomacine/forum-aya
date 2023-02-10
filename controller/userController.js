@@ -88,8 +88,8 @@ export const userIdController = async (req, res) => {
     try {
         //const token = obtainTokenFromHeader(req)
         // console.log(token);
-        //console.log(req, userAuth);
-        const foundUser = await User.findById(id);
+        console.log(req, userAuth);
+        const foundUser = await User.findById(req.userAuth);
         if (foundUser) {
             res.json({
                 status: "success",
