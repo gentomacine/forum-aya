@@ -107,6 +107,46 @@ export const userIdController = async (req, res) => {
     }
 
 }
+//profile picture
+export const profilePhotoUploadController = async (req, res) => {
+    //console.log(req.file);
+
+    try {
+        //find user that wants to upload
+        const profileUserToBeUpdated = await User.findById(req.userAuth)
+        //check if the user exists
+        if (!profileUserToBeUpdated) {
+            res.json({
+                status: "error",
+                message: "user not found"
+            })
+        }
+        //if the user is updating
+        if (req.file) {
+            //update the profile
+            await User.findByIdAndUpdate(req.userAuth, {
+                $set: {
+                    profilephoto: req.file.path
+                },
+            }, {
+                new: true,
+            }
+
+            );
+            res.json({
+                status: "success",
+                data: "image uploaded successfully"
+            })
+        }
+
+
+
+
+    } catch (error) {
+        res.json(error.message)
+
+    }
+}
 
 export const userDeleteController = async (req, res) => {
     try {
